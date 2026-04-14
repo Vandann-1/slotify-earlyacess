@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* If you want the specific background from your image */
+:root {
+  background-color: #F9FAFB;
+}
