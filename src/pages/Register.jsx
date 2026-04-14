@@ -9,6 +9,9 @@ export default function Register() {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -17,20 +20,29 @@ export default function Register() {
   };
 
   const handleRegister = async (e) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
     try {
-      await API.post("/register/", form);
-      alert("Registration successful");
+      // NOTE: Using "/auth/register/" because your Backend urls.py 
+      // nests account URLs under "api/auth/"
+      await API.post("/auth/register/", form);
+      
+      alert("Registration successful! Welcome to Slotify.");
       window.location.href = "/login";
     } catch (err) {
-      console.error(err.response?.data);
-      alert("Registration failed");
+      console.error("Registration Error:", err.response?.data);
+      // Capture specific backend error messages if available
+      setError(err.response?.data?.detail || "Registration failed. Please check your details.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex font-sans antialiased text-slate-900">
-      {/* Left Side: Branding & Stats */}
+      {/* Left Side: Branding & Stats (Visible on desktop) */}
       <div className="hidden lg:flex flex-col justify-between w-1/2 p-16 xl:p-24 bg-white border-r border-slate-100">
         <div className="space-y-12">
           {/* Logo */}
@@ -71,8 +83,7 @@ export default function Register() {
             ))}
           </div>
         </div>
-
-        <div className="text-sm text-slate-300">© 2025 Slotify Inc.</div>
+        <div className="text-sm text-slate-300">© 2026 Slotify Inc.</div>
       </div>
 
       {/* Right Side: Registration Form */}
@@ -85,10 +96,17 @@ export default function Register() {
             </p>
           </div>
 
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium">
+              {typeof error === "string" ? error : "Something went wrong. Check your inputs."}
+            </div>
+          )}
+
           <form onSubmit={handleRegister} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Full name</label>
               <input
+                required
                 name="full_name"
                 placeholder="Jane Doe"
                 onChange={handleChange}
@@ -100,6 +118,7 @@ export default function Register() {
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Username</label>
                 <input
+                  required
                   name="username"
                   placeholder="janedoe"
                   onChange={handleChange}
@@ -109,6 +128,7 @@ export default function Register() {
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
                 <input
+                  required
                   name="email"
                   type="email"
                   placeholder="you@work.com"
@@ -121,6 +141,7 @@ export default function Register() {
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Password</label>
               <input
+                required
                 name="password"
                 type="password"
                 placeholder="Min. 8 characters"
@@ -131,9 +152,11 @@ export default function Register() {
 
             <button 
               type="submit"
-              className="w-full py-4 bg-[#5850EC] text-white font-bold rounded-xl hover:bg-indigo-700 transform transition-active active:scale-[0.98] shadow-lg shadow-indigo-100 flex items-center justify-center gap-2"
+              disabled={loading}
+              className={`w-full py-4 bg-[#5850EC] text-white font-bold rounded-xl hover:bg-indigo-700 transform transition-active active:scale-[0.98] shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              Get started free <span className="text-lg">→</span>
+              {loading ? "Creating account..." : "Get started free"} 
+              {!loading && <span className="text-lg">→</span>}
             </button>
           </form>
 
@@ -158,9 +181,6 @@ export default function Register() {
           <div className="mt-10 text-center">
             <p className="text-slate-400 font-medium">
               Already have an account? <a href="/login" className="text-[#5850EC] font-bold hover:underline">Sign in</a>
-            </p>
-            <p className="mt-4 text-xs text-slate-400 px-8 leading-relaxed">
-              By signing up, you agree to our <a href="#" className="underline">Terms</a> & <a href="#" className="underline">Privacy Policy</a>
             </p>
           </div>
         </div>
