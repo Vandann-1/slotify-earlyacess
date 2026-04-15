@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/ProfileP"; // your home after login
 import Register from "./pages/Register"; // optional, if you have a registration page
 import Main from "./pages/Main";
+import Home from "./pages/Home"; // your home after login
 import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
 
         {/* LOGIN PAGE */}
         <Route path="/login" element={<Login />} />
+        <Route path="/Home" element={<Home />} />
 
         {/* AFTER LOGIN (HOME / PROFILE) */}
         <Route

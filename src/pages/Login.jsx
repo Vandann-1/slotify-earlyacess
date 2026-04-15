@@ -23,7 +23,7 @@ export default function Login() {
       localStorage.setItem("refresh", res.data.refresh);
 
       // Success alert & Redirect
-      window.location.href = "/profile";
+      window.location.href = "/Home";
     } catch (err) {
       console.error(err.response?.data);
       setError("Invalid email or password. Please try again.");
