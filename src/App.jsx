@@ -1,39 +1,150 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Login from "./pages/Login";
-import Profile from "./pages/ProfileP"; // your home after login
-import Register from "./pages/Register"; // optional, if you have a registration page
+import Register from "./pages/Register";
 import Main from "./pages/Main";
-import Home from "./pages/Home"; // your home after login
+
+import Home from "./pages/Home";
+
+import Explore from "./pages/Explore";
+import Slots from "./pages/Slots";
+import Profile from "./pages/ProfileP";
+
+// OPTIONAL
+// import MyBooking from "./pages/MyBooking";
+
 import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
+
   return (
+
     <Router>
+
       <Routes>
 
-        {/* DEFAULT → ALWAYS LOGIN */}
-        <Route path="/" element={<Navigate to="/main" />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/main" element={<Main />} />
+        {/* ================================= */}
+        {/* PUBLIC ROUTES */}
+        {/* ================================= */}
 
-        {/* LOGIN PAGE */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/Home" element={<Home />} />
-
-        {/* AFTER LOGIN (HOME / PROFILE) */}
         <Route
-          path="/profile"
+          path="/"
+          element={
+            <Navigate to="/main" />
+          }
+        />
+
+        <Route
+          path="/main"
+          element={<Main />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+        {/* ================================= */}
+        {/* PROTECTED DASHBOARD */}
+        {/* ================================= */}
+
+        <Route
+          path="/home"
           element={
             <PrivateRoute>
-              <Profile />
+
+              {/* MAIN LAYOUT */}
+              <Home />
+
             </PrivateRoute>
+          }
+        >
+
+          {/* DEFAULT */}
+
+          <Route
+            index
+            element={
+              <Navigate
+                to="explore"
+              />
+            }
+          />
+
+          {/* ================================= */}
+          {/* EXPLORE */}
+          {/* ================================= */}
+
+          <Route
+            path="explore"
+            element={<Explore />}
+          />
+
+          {/* ================================= */}
+          {/* SLOTS */}
+          {/* ================================= */}
+
+          {/* SEARCH PAGE */}
+          {/* NO STATIC TENANT */}
+
+          <Route
+            path="slots"
+            element={<Slots />}
+          />
+
+          {/* ================================= */}
+          {/* PROFILE */}
+          {/* ================================= */}
+
+          <Route
+            path="profile"
+            element={<Profile />}
+          />
+
+          {/* ================================= */}
+          {/* MY BOOKINGS */}
+          {/* ================================= */}
+
+          <Route
+            path="mybooking"
+            element={
+              <div>
+
+                My Booking
+
+              </div>
+            }
+          />
+
+        </Route>
+
+        {/* ================================= */}
+        {/* 404 */}
+        {/* ================================= */}
+
+        <Route
+          path="*"
+          element={
+            <Navigate to="/main" />
           }
         />
 
       </Routes>
+
     </Router>
+
   );
+
 }
 
 export default App;
