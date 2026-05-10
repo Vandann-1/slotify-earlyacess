@@ -1,44 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
-// ─── Icons (inline SVG, no deps) ─────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
 const IconCompass = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
   </svg>
 );
 const IconCalendar = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
   </svg>
 );
 const IconBookmark = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
   </svg>
 );
 const IconUser = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
   </svg>
 );
-const IconChevronLeft = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="15 18 9 12 15 6"/>
-  </svg>
-);
-const IconChevronRight = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="9 18 15 12 9 6"/>
-  </svg>
-);
-const IconLogout = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-  </svg>
-);
 const IconBell = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
   </svg>
 );
@@ -47,9 +32,19 @@ const IconSearch = () => (
     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
   </svg>
 );
-const IconDots = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
+const IconLogout = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+  </svg>
+);
+const IconChevronDown = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="6 9 12 15 18 9"/>
+  </svg>
+);
+const IconSettings = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
   </svg>
 );
 
@@ -61,390 +56,457 @@ const NAV_ITEMS = [
   { label: "Profile",    path: "/home/profile",    icon: <IconUser />,     badge: null },
 ];
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// ─── CSS ──────────────────────────────────────────────────────────────────────
 const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@400;500;600;700;800&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --brand:       #3B7597;
-    --brand-light: #EBF4FA;
-    --brand-mid:   #5B9FBF;
-    --brand-dark:  #245A75;
-    --brand-xdark: #163E52;
-    --sidebar-bg:  #0E2430;
-    --sidebar-border: rgba(255,255,255,0.06);
-    --text-on-dark: rgba(255,255,255,0.85);
-    --text-muted:  rgba(255,255,255,0.45);
-    --page-bg:     #F4F7FA;
-    --card-bg:     #FFFFFF;
-    --border:      #E5EAF0;
-    --text-primary: #16293A;
-    --text-secondary: #64798A;
-    --font-display: 'Clash Display', sans-serif;
-    --font-body:    'Satoshi', sans-serif;
-    --radius-sm:    8px;
-    --radius-md:    12px;
-    --radius-lg:    16px;
-    --radius-xl:    20px;
-    --sidebar-w:    258px;
-    --sidebar-collapsed: 72px;
-    --topbar-h:     66px;
-    --transition:   0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    --brand:         #2F2FE4;
+    --brand-hover:   #2424c4;
+    --brand-light:   #EEEEFF;
+    --brand-mid:     #5858EC;
+    --brand-xlight:  #F5F5FF;
+    --nav-bg:        #2F2FE4;
+    --nav-border:    rgba(255,255,255,0.12);
+    --page-bg:       #F7F8FC;
+    --card-bg:       #FFFFFF;
+    --border:        #E8ECF2;
+    --text-primary:  #0D0F1C;
+    --text-secondary:#6B7280;
+    --text-on-brand: #FFFFFF;
+    --text-nav-idle: rgba(255,255,255,0.72);
+    --text-nav-active: #FFFFFF;
+    --success:       #10B981;
+    --warning:       #F59E0B;
+    --danger:        #EF4444;
+    --font-display:  'Syne', sans-serif;
+    --font-body:     'Plus Jakarta Sans', sans-serif;
+    --radius-sm:     6px;
+    --radius-md:     10px;
+    --radius-lg:     14px;
+    --radius-xl:     20px;
+    --nav-h:         62px;
+    --subnav-h:      46px;
+    --shadow-sm:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md:     0 4px 16px rgba(47,47,228,0.10);
+    --shadow-lg:     0 8px 32px rgba(47,47,228,0.15);
+    --transition:    0.18s cubic-bezier(0.4,0,0.2,1);
   }
 
   html, body, #root { height: 100%; }
 
-  .slotify-layout {
+  .slotify-app {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    flex-direction: column;
+    min-height: 100vh;
     background: var(--page-bg);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── SIDEBAR ─────────────────────────────────────────── */
-  .sidebar {
-    width: var(--sidebar-w);
-    min-width: var(--sidebar-w);
-    background: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
-    transition: width var(--transition), min-width var(--transition);
-    position: relative;
-    z-index: 10;
-    overflow: hidden;
-  }
-  .sidebar.collapsed {
-    width: var(--sidebar-collapsed);
-    min-width: var(--sidebar-collapsed);
+  /* ── TOP NAV ─────────────────────────────────────────── */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--nav-border);
+    box-shadow: 0 2px 20px rgba(47,47,228,0.18);
   }
 
-  /* accent line top */
-  .sidebar::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--brand) 0%, var(--brand-mid) 100%);
-  }
-
-  /* ── Logo ─── */
-  .sidebar-logo {
+  /* Primary bar */
+  .topnav-primary {
+    height: var(--nav-h);
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 22px 18px 18px;
-    border-bottom: 1px solid var(--sidebar-border);
-    min-height: 70px;
-    overflow: hidden;
+    padding: 0 32px;
+    gap: 0;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
   }
-  .logo-mark {
-    width: 38px; height: 38px;
-    border-radius: var(--radius-md);
-    background: var(--brand);
+
+  /* Logo */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+    margin-right: 36px;
+    cursor: pointer;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+    border: 1.5px solid rgba(255,255,255,0.3);
     display: flex; align-items: center; justify-content: center;
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 18px;
-    color: #fff;
-    flex-shrink: 0;
-    letter-spacing: -0.5px;
-    box-shadow: 0 0 0 4px rgba(59,117,151,0.22);
-  }
-  .logo-text { overflow: hidden; white-space: nowrap; }
-  .logo-name {
-    font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 800;
     font-size: 17px;
     color: #fff;
-    letter-spacing: -0.3px;
-    line-height: 1;
+    letter-spacing: -0.5px;
+    backdrop-filter: blur(8px);
+    transition: background var(--transition), transform var(--transition);
   }
-  .logo-sub {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 3px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+  .nav-logo:hover .logo-icon {
+    background: rgba(255,255,255,0.28);
+    transform: scale(1.04);
   }
-
-  /* ── Nav label ─── */
-  .nav-section-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 18px 20px 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    opacity: 1;
-    transition: opacity var(--transition), padding var(--transition);
+  .logo-wordmark {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: -0.5px;
   }
-  .collapsed .nav-section-label {
-    opacity: 0;
-    padding-top: 12px;
-    padding-bottom: 4px;
+  .logo-dot {
+    color: rgba(255,255,255,0.55);
   }
 
-  /* ── Nav ─── */
-  .nav-list {
-    flex: 1;
-    padding: 6px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    overflow: hidden;
-  }
-  .nav-item {
+  /* Nav links — primary */
+  .nav-links {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
+    gap: 2px;
+    flex: 1;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
     border-radius: var(--radius-md);
-    cursor: pointer;
-    border: none;
     background: transparent;
-    color: var(--text-muted);
+    border: none;
+    color: var(--text-nav-idle);
     font-family: var(--font-body);
     font-size: 14px;
     font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 100%;
-    text-align: left;
+    cursor: pointer;
     position: relative;
     transition: background var(--transition), color var(--transition);
+    white-space: nowrap;
+    letter-spacing: 0.01em;
   }
-  .nav-item:hover {
-    background: rgba(255,255,255,0.06);
-    color: rgba(255,255,255,0.75);
-  }
-  .nav-item.active {
-    background: var(--brand);
+  .nav-link:hover {
+    background: rgba(255,255,255,0.1);
     color: #fff;
-    box-shadow: 0 4px 16px rgba(59,117,151,0.35);
   }
-  .nav-icon {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-  }
-  .nav-label { flex: 1; letter-spacing: 0.01em; }
-  .nav-badge {
+  .nav-link.active {
     background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-weight: 600;
+  }
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 14px;
+    right: 14px;
+    height: 2px;
+    border-radius: 2px 2px 0 0;
+    background: rgba(255,255,255,0.85);
+  }
+  .nav-badge {
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.3);
     color: #fff;
     font-size: 10px;
     font-weight: 700;
     border-radius: 20px;
-    padding: 1px 7px;
-    flex-shrink: 0;
+    padding: 1px 6px;
+    line-height: 1.5;
   }
-  .nav-item.active .nav-badge {
-    background: rgba(255,255,255,0.25);
-  }
-
-  /* ── Collapse toggle ─── */
-  .collapse-btn {
-    margin: 0 12px 10px;
-    padding: 9px;
-    border-radius: var(--radius-md);
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--sidebar-border);
-    color: var(--text-muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background var(--transition), color var(--transition);
-  }
-  .collapse-btn:hover {
-    background: rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.7);
+  .nav-link.active .nav-badge {
+    background: rgba(255,255,255,0.9);
+    color: var(--brand);
+    border-color: transparent;
   }
 
-  /* ── User footer ─── */
-  .sidebar-footer {
-    border-top: 1px solid var(--sidebar-border);
-    padding: 14px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .user-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    overflow: hidden;
-  }
-  .user-avatar {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: var(--brand);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 13px;
-    color: #fff;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 2px rgba(59,117,151,0.4);
-  }
-  .user-info { overflow: hidden; flex: 1; }
-  .user-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.88);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .user-role {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 1px;
-  }
-  .user-dots {
-    flex-shrink: 0;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 2px;
-  }
-  .logout-btn {
+  /* Nav right */
+  .nav-right {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 9px 12px;
-    border-radius: var(--radius-md);
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.2);
-    color: #f87171;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background var(--transition);
-    overflow: hidden;
-    white-space: nowrap;
-    width: 100%;
-  }
-  .logout-btn:hover { background: rgba(239,68,68,0.18); }
-
-  /* ── MAIN ─────────────────────────────────────────── */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  /* ── Topbar ─── */
-  .topbar {
-    height: var(--topbar-h);
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 28px;
+    margin-left: auto;
     flex-shrink: 0;
   }
-  .topbar-left { display: flex; flex-direction: column; gap: 2px; }
-  .page-title {
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.3px;
-    line-height: 1;
-  }
-  .page-breadcrumb {
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
-  .breadcrumb-sep { margin: 0 5px; opacity: 0.5; }
-  .breadcrumb-active { color: var(--brand); font-weight: 500; }
 
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .topbar-search {
+  /* Search pill */
+  .nav-search {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--page-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 7px 14px;
-    color: var(--text-secondary);
-    font-family: var(--font-body);
-    font-size: 13px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 7px 16px;
+    color: rgba(255,255,255,0.6);
+    transition: background var(--transition), border-color var(--transition);
+    cursor: text;
   }
-  .topbar-search input {
+  .nav-search:hover, .nav-search:focus-within {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.3);
+  }
+  .nav-search input {
     border: none;
     background: transparent;
     outline: none;
-    color: var(--text-primary);
+    color: #fff;
     font-family: var(--font-body);
     font-size: 13px;
-    width: 160px;
+    width: 140px;
   }
-  .topbar-search input::placeholder { color: var(--text-secondary); }
-  .icon-btn {
+  .nav-search input::placeholder { color: rgba(255,255,255,0.5); }
+
+  /* Icon btn */
+  .nav-icon-btn {
     width: 36px; height: 36px;
-    border-radius: var(--radius-md);
-    background: var(--page-bg);
-    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    color: var(--text-secondary);
+    color: rgba(255,255,255,0.8);
     position: relative;
     transition: background var(--transition), border-color var(--transition);
+    flex-shrink: 0;
   }
-  .icon-btn:hover { background: var(--brand-light); border-color: var(--brand); color: var(--brand); }
+  .nav-icon-btn:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.3);
+    color: #fff;
+  }
   .notif-dot {
     position: absolute;
-    top: 6px; right: 6px;
+    top: 7px; right: 7px;
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: #ef4444;
-    border: 2px solid var(--card-bg);
-  }
-  .topbar-avatar {
-    width: 36px; height: 36px;
-    border-radius: var(--radius-md);
-    background: var(--brand);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 13px;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 0 0 2px var(--brand-light);
+    background: #FF5A5A;
+    border: 2px solid var(--brand);
   }
 
-  /* ── Content ─── */
-  .content {
+  /* User menu */
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 4px 10px 4px 4px;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+    position: relative;
+  }
+  .nav-user:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.3);
+  }
+  .user-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    color: var(--brand);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .user-name-nav {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* User dropdown */
+  .user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+    animation: dropIn 0.15s ease;
+    z-index: 200;
+  }
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+  }
+  .dropdown-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--brand-xlight);
+  }
+  .dropdown-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+  .dropdown-role {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background var(--transition);
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    font-family: var(--font-body);
+  }
+  .dropdown-item:hover { background: var(--brand-xlight); color: var(--brand); }
+  .dropdown-item.danger { color: var(--danger); }
+  .dropdown-item.danger:hover { background: #FFF5F5; }
+  .dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+  /* ── SUB-NAV / Breadcrumb bar ─────────────────────────── */
+  .subnav {
+    background: rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    height: var(--subnav-h);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 8px;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.55);
+  }
+  .breadcrumb-brand { font-weight: 600; color: rgba(255,255,255,0.75); }
+  .breadcrumb-sep { opacity: 0.4; }
+  .breadcrumb-current {
+    color: rgba(255,255,255,0.95);
+    font-weight: 600;
+    background: rgba(255,255,255,0.14);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+  }
+
+  /* ── PAGE CONTENT ─────────────────────────────────────── */
+  .page-body {
     flex: 1;
     overflow-y: auto;
-    padding: 28px;
+    padding: 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
   }
-  .content::-webkit-scrollbar { width: 6px; }
-  .content::-webkit-scrollbar-track { background: transparent; }
-  .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  .page-body::-webkit-scrollbar { width: 5px; }
+  .page-body::-webkit-scrollbar-track { background: transparent; }
+  .page-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  /* ── MOBILE NAV ───────────────────────────────────────── */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    z-index: 100;
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  }
+  .mobile-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 16px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    transition: color var(--transition);
+    position: relative;
+  }
+  .mobile-nav-item.active {
+    color: var(--brand);
+  }
+  .mobile-nav-item.active .mobile-icon-wrap {
+    background: var(--brand-light);
+  }
+  .mobile-icon-wrap {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--transition);
+  }
+  .mobile-badge {
+    position: absolute;
+    top: 4px;
+    right: calc(50% - 22px);
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid #fff;
+  }
+
+  @media (max-width: 768px) {
+    .topnav-primary { padding: 0 16px; }
+    .nav-links { display: none; }
+    .nav-search { display: none; }
+    .nav-user .user-name-nav { display: none; }
+    .subnav { padding: 0 16px; }
+    .page-body { padding: 16px 16px 88px; }
+    .mobile-nav { display: block; }
+    .logo-wordmark { font-size: 18px; }
+  }
 `;
 
 export default function Home() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
   const [user, setUser] = useState({ fullName: "Loading...", initials: ".." });
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const storedName = localStorage.getItem("user_fullname") || "Guest User";
@@ -454,109 +516,143 @@ export default function Home() {
     });
   }, []);
 
-  const handleLogout = () => { localStorage.clear(); navigate("/login"); };
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   const currentPage = NAV_ITEMS.find((item) => location.pathname === item.path);
 
   return (
     <>
       <style>{CSS}</style>
-      <div className="slotify-layout">
+      <div className="slotify-app">
 
-        {/* ── SIDEBAR ─────────────────── */}
-        <aside className={`sidebar${collapsed ? " collapsed" : ""}`}>
+        {/* ── TOP NAV ─────────────────────────────────────── */}
+        <nav className="topnav">
+          <div className="topnav-primary">
 
-          {/* Logo */}
-          <div className="sidebar-logo">
-            <div className="logo-mark">S</div>
-            {!collapsed && (
-              <div className="logo-text">
-                <div className="logo-name">Slotify</div>
-                <div className="logo-sub">Booking System</div>
+            {/* Logo */}
+            <div className="nav-logo" onClick={() => navigate("/home/explore")}>
+              <div className="logo-icon">S</div>
+              <span className="logo-wordmark">Slotify<span className="logo-dot">.</span></span>
+            </div>
+
+            {/* Nav Links */}
+            <div className="nav-links">
+              {NAV_ITEMS.map((item) => {
+                const active = location.pathname === item.path;
+                return (
+                  <button
+                    key={item.path}
+                    className={`nav-link${active ? " active" : ""}`}
+                    onClick={() => navigate(item.path)}
+                  >
+                    {item.icon}
+                    {item.label}
+                    {item.badge && (
+                      <span className="nav-badge">{item.badge}</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right side */}
+            <div className="nav-right">
+              <div className="nav-search">
+                <IconSearch />
+                <input placeholder="Search slots, services..." />
               </div>
-            )}
+
+              <button className="nav-icon-btn" title="Notifications">
+                <IconBell />
+                <span className="notif-dot" />
+              </button>
+
+              {/* User menu */}
+              <div
+                className="nav-user"
+                ref={dropdownRef}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <div className="user-avatar">{user.initials}</div>
+                <span className="user-name-nav">{user.fullName.split(" ")[0]}</span>
+                <IconChevronDown />
+
+                {dropdownOpen && (
+                  <div className="user-dropdown">
+                    <div className="dropdown-header">
+                      <div className="dropdown-name">{user.fullName}</div>
+                      <div className="dropdown-role">Member</div>
+                    </div>
+                    <button className="dropdown-item" onClick={() => { navigate("/home/profile"); setDropdownOpen(false); }}>
+                      <IconUser /> My Profile
+                    </button>
+                    <button className="dropdown-item" onClick={() => { navigate("/home/mybooking"); setDropdownOpen(false); }}>
+                      <IconBookmark /> My Bookings
+                    </button>
+                    <button className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      <IconSettings /> Settings
+                    </button>
+                    <div className="dropdown-divider" />
+                    <button className="dropdown-item danger" onClick={handleLogout}>
+                      <IconLogout /> Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Nav label */}
-          <div className="nav-section-label">Main Menu</div>
+          {/* Sub-nav / Breadcrumb */}
+          <div style={{ background: "rgba(0,0,0,0.12)", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="subnav">
+              <div className="breadcrumb">
+                <span className="breadcrumb-brand">Slotify</span>
+                <span className="breadcrumb-sep">›</span>
+                <span className="breadcrumb-current">{currentPage?.label || "Home"}</span>
+              </div>
+            </div>
+          </div>
+        </nav>
 
-          {/* Nav items */}
-          <nav className="nav-list">
+        {/* ── PAGE CONTENT ─────────────────────────────────── */}
+        <main className="page-body">
+          <Outlet />
+        </main>
+
+        {/* ── MOBILE BOTTOM NAV ─────────────────────────────── */}
+        <div className="mobile-nav">
+          <div className="mobile-nav-inner">
             {NAV_ITEMS.map((item) => {
               const active = location.pathname === item.path;
               return (
                 <button
                   key={item.path}
-                  className={`nav-item${active ? " active" : ""}`}
+                  className={`mobile-nav-item${active ? " active" : ""}`}
                   onClick={() => navigate(item.path)}
-                  title={collapsed ? item.label : undefined}
                 >
-                  <span className="nav-icon">{item.icon}</span>
-                  {!collapsed && <span className="nav-label">{item.label}</span>}
-                  {!collapsed && item.badge && (
-                    <span className="nav-badge">{item.badge}</span>
+                  {item.badge && (
+                    <span className="mobile-badge">{item.badge}</span>
                   )}
+                  <span className="mobile-icon-wrap">{item.icon}</span>
+                  {item.label}
                 </button>
               );
             })}
-          </nav>
-
-          {/* Collapse btn */}
-          <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? <IconChevronRight /> : <IconChevronLeft />}
-          </button>
-
-          {/* Footer */}
-          <div className="sidebar-footer">
-            <div className="user-row">
-              <div className="user-avatar">{user.initials}</div>
-              {!collapsed && (
-                <>
-                  <div className="user-info">
-                    <div className="user-name">{user.fullName}</div>
-                    <div className="user-role">Member</div>
-                  </div>
-                  <span className="user-dots"><IconDots /></span>
-                </>
-              )}
-            </div>
-            <button className="logout-btn" onClick={handleLogout}>
-              <IconLogout />
-              {!collapsed && "Logout"}
-            </button>
           </div>
-        </aside>
-
-        {/* ── MAIN ─────────────────────── */}
-        <div className="main">
-
-          {/* Topbar */}
-          <header className="topbar">
-            <div className="topbar-left">
-              <div className="page-title">{currentPage?.label || "Dashboard"}</div>
-              <div className="page-breadcrumb">
-                Slotify
-                <span className="breadcrumb-sep">/</span>
-                <span className="breadcrumb-active">{currentPage?.label || "Dashboard"}</span>
-              </div>
-            </div>
-            <div className="topbar-right">
-              <div className="topbar-search">
-                <IconSearch />
-                <input placeholder="Search..." />
-              </div>
-              <button className="icon-btn">
-                <IconBell />
-                <span className="notif-dot" />
-              </button>
-              <div className="topbar-avatar">{user.initials}</div>
-            </div>
-          </header>
-
-          {/* Page Content */}
-          <main className="content">
-            <Outlet />
-          </main>
         </div>
 
       </div>
